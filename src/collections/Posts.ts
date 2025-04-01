@@ -5,6 +5,7 @@ export const Posts: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'published', 'createdAt'],
+    group: 'Content',
   },
   fields: [
     {
@@ -46,6 +47,15 @@ export const Posts: CollectionConfig = {
       name: 'featuredImage',
       type: 'upload',
       relationTo: 'media',
+    },
+    {
+      name: 'author',
+      type: 'relationship',
+      relationTo: 'user-profile',
+      required: false,
+      admin: {
+        position: 'sidebar',
+      },
     },
   ],
 }

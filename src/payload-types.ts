@@ -69,6 +69,11 @@ export interface Config {
     users: User;
     media: Media;
     posts: Post;
+    showcase: Showcase;
+    'visual-journal': VisualJournal;
+    navigation: Navigation;
+    'user-profile': UserProfile;
+    courses: Course;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -78,6 +83,11 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
+    showcase: ShowcaseSelect<false> | ShowcaseSelect<true>;
+    'visual-journal': VisualJournalSelect<false> | VisualJournalSelect<true>;
+    navigation: NavigationSelect<false> | NavigationSelect<true>;
+    'user-profile': UserProfileSelect<false> | UserProfileSelect<true>;
+    courses: CoursesSelect<false> | CoursesSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -85,8 +95,14 @@ export interface Config {
   db: {
     defaultIDType: string;
   };
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    'site-settings': SiteSetting;
+    'footer-settings': FooterSetting;
+  };
+  globalsSelect: {
+    'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+    'footer-settings': FooterSettingsSelect<false> | FooterSettingsSelect<true>;
+  };
   locale: null;
   user: User & {
     collection: 'users';
@@ -182,6 +198,197 @@ export interface Post {
       }[]
     | null;
   featuredImage?: (string | null) | Media;
+  author?: (string | null) | UserProfile;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "user-profile".
+ */
+export interface UserProfile {
+  id: string;
+  name: string;
+  slug: string;
+  profilePhoto?: (string | null) | Media;
+  bio?: string | null;
+  about?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  socialLinks?:
+    | {
+        platform?: string | null;
+        url?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  tags?:
+    | {
+        tag?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  cta?: {
+    label?: string | null;
+    url?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "showcase".
+ */
+export interface Showcase {
+  id: string;
+  title: string;
+  slug: string;
+  published?: boolean | null;
+  type: 'project' | 'my-work' | 'wip' | 'concept' | 'inspiration' | 'aussie-business' | 'product-spotlight';
+  status?: ('in-progress' | 'completed' | 'archived') | null;
+  excerpt?: string | null;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  techStack?:
+    | {
+        tech?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  links?:
+    | {
+        label?: string | null;
+        url?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Add a URL, person, or company if you didn’t make this.
+   */
+  source?: string | null;
+  /**
+   * Write a short reflection or takeaway about this showcase item.
+   */
+  learningNote?: string | null;
+  featured?: boolean | null;
+  featuredImage?: (string | null) | Media;
+  publishedDate?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "visual-journal".
+ */
+export interface VisualJournal {
+  id: string;
+  title: string;
+  slug: string;
+  published?: boolean | null;
+  date: string;
+  media: string | Media;
+  caption?: string | null;
+  tags?:
+    | {
+        tag?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Optional — e.g. city, place, or event
+   */
+  location?: string | null;
+  featured?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "navigation".
+ */
+export interface Navigation {
+  id: string;
+  title: string;
+  slug: string;
+  location: 'header' | 'footer' | 'sidebar';
+  links?:
+    | {
+        label: string;
+        url: string;
+        external?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "courses".
+ */
+export interface Course {
+  id: string;
+  title: string;
+  slug: string;
+  description?: string | null;
+  /**
+   * Price in your local currency. e.g., 49.99
+   */
+  price: number;
+  tags?:
+    | {
+        tag?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  featuredImage?: (string | null) | Media;
+  lessons?:
+    | {
+        title: string;
+        content?: {
+          root: {
+            type: string;
+            children: {
+              type: string;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        id?: string | null;
+      }[]
+    | null;
+  featured?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -203,6 +410,26 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'posts';
         value: string | Post;
+      } | null)
+    | ({
+        relationTo: 'showcase';
+        value: string | Showcase;
+      } | null)
+    | ({
+        relationTo: 'visual-journal';
+        value: string | VisualJournal;
+      } | null)
+    | ({
+        relationTo: 'navigation';
+        value: string | Navigation;
+      } | null)
+    | ({
+        relationTo: 'user-profile';
+        value: string | UserProfile;
+      } | null)
+    | ({
+        relationTo: 'courses';
+        value: string | Course;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -296,6 +523,140 @@ export interface PostsSelect<T extends boolean = true> {
         id?: T;
       };
   featuredImage?: T;
+  author?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "showcase_select".
+ */
+export interface ShowcaseSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  published?: T;
+  type?: T;
+  status?: T;
+  excerpt?: T;
+  content?: T;
+  techStack?:
+    | T
+    | {
+        tech?: T;
+        id?: T;
+      };
+  links?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+        id?: T;
+      };
+  source?: T;
+  learningNote?: T;
+  featured?: T;
+  featuredImage?: T;
+  publishedDate?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "visual-journal_select".
+ */
+export interface VisualJournalSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  published?: T;
+  date?: T;
+  media?: T;
+  caption?: T;
+  tags?:
+    | T
+    | {
+        tag?: T;
+        id?: T;
+      };
+  location?: T;
+  featured?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "navigation_select".
+ */
+export interface NavigationSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  location?: T;
+  links?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+        external?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "user-profile_select".
+ */
+export interface UserProfileSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  profilePhoto?: T;
+  bio?: T;
+  about?: T;
+  socialLinks?:
+    | T
+    | {
+        platform?: T;
+        url?: T;
+        id?: T;
+      };
+  tags?:
+    | T
+    | {
+        tag?: T;
+        id?: T;
+      };
+  cta?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "courses_select".
+ */
+export interface CoursesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  description?: T;
+  price?: T;
+  tags?:
+    | T
+    | {
+        tag?: T;
+        id?: T;
+      };
+  featuredImage?: T;
+  lessons?:
+    | T
+    | {
+        title?: T;
+        content?: T;
+        id?: T;
+      };
+  featured?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -330,6 +691,103 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings".
+ */
+export interface SiteSetting {
+  id: string;
+  siteName: string;
+  tagline?: string | null;
+  socialLinks?:
+    | {
+        platform?: string | null;
+        url?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  seo?: {
+    metaTitle?: string | null;
+    metaDescription?: string | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "footer-settings".
+ */
+export interface FooterSetting {
+  id: string;
+  /**
+   * Copyright, disclaimers, or custom text.
+   */
+  footerText?: string | null;
+  footerSocialLinks?:
+    | {
+        platform: string;
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  footerLinks?:
+    | {
+        label: string;
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings_select".
+ */
+export interface SiteSettingsSelect<T extends boolean = true> {
+  siteName?: T;
+  tagline?: T;
+  socialLinks?:
+    | T
+    | {
+        platform?: T;
+        url?: T;
+        id?: T;
+      };
+  seo?:
+    | T
+    | {
+        metaTitle?: T;
+        metaDescription?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "footer-settings_select".
+ */
+export interface FooterSettingsSelect<T extends boolean = true> {
+  footerText?: T;
+  footerSocialLinks?:
+    | T
+    | {
+        platform?: T;
+        url?: T;
+        id?: T;
+      };
+  footerLinks?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
